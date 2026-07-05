@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가위바위보 게임</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>✊✌️🖐️ 가위바위보</h1>
+
+    <div class="scoreboard">
+      <div class="score-box">
+        <div class="score-label">나</div>
+        <div id="myScore" class="score-value">0</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label">비김</div>
+        <div id="drawScore" class="score-value">0</div>
+      </div>
+      <div class="score-box">
+        <div class="score-label">컴퓨터</div>
+        <div id="cpuScore" class="score-value">0</div>
+      </div>
+    </div>
+
+    <div class="battle-area">
+      <div class="hand-display">
+        <div class="hand-label">나</div>
+        <div id="myHand" class="hand">❓</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="hand-display">
+        <div class="hand-label">컴퓨터</div>
+        <div id="cpuHand" class="hand">❓</div>
+      </div>
+    </div>
+
+    <div id="resultMessage" class="result-message">아래 버튼을 눌러 시작하세요!</div>
+
+    <div class="choices">
+      <button class="choice-btn" data-choice="rock">✊<span>바위</span></button>
+      <button class="choice-btn" data-choice="scissors">✌️<span>가위</span></button>
+      <button class="choice-btn" data-choice="paper">🖐️<span>보</span></button>
+    </div>
+
+    <button id="resetBtn" class="reset-btn">점수 초기화</button>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>

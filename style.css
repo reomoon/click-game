@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 50%, #fbc2eb 100%);
+  padding: 20px;
+}
+
+.container {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 24px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: 28px;
+  color: #4a4a4a;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.score-box {
+  background: #f4f6ff;
+  border-radius: 16px;
+  padding: 10px 16px;
+  min-width: 70px;
+}
+
+.score-label {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.score-value {
+  font-size: 26px;
+  font-weight: bold;
+  color: #5b6df0;
+}
+
+.battle-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.hand-display {
+  flex: 1;
+}
+
+.hand-label {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.hand {
+  font-size: 64px;
+  transition: transform 0.2s;
+}
+
+.hand.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+}
+
+.vs {
+  font-size: 18px;
+  font-weight: bold;
+  color: #bbb;
+}
+
+.result-message {
+  font-size: 20px;
+  font-weight: bold;
+  min-height: 30px;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.result-message.win { color: #2ecc71; }
+.result-message.lose { color: #e74c3c; }
+.result-message.draw { color: #f39c12; }
+
+.choices {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.choice-btn {
+  flex: 1;
+  max-width: 110px;
+  background: #f4f6ff;
+  border: 3px solid transparent;
+  border-radius: 18px;
+  padding: 14px 8px;
+  font-size: 36px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.choice-btn span {
+  font-size: 15px;
+  color: #555;
+  font-weight: bold;
+}
+
+.choice-btn:hover {
+  transform: translateY(-4px);
+  border-color: #5b6df0;
+  background: #eaeeff;
+}
+
+.choice-btn:active {
+  transform: translateY(0);
+}
+
+.reset-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.reset-btn:hover {
+  color: #666;
+}
