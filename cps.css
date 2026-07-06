@@ -89,8 +89,29 @@ h1 {
   color: #ff6f61;
 }
 
-#coinCount {
-  color: #d4a017;
+.coin-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #ffe066 0%, #ffb300 100%);
+  color: #6b4a00;
+  font-weight: bold;
+  padding: 6px 18px;
+  border-radius: 999px;
+  margin: 0 auto 14px;
+  box-shadow: 0 4px 10px rgba(255, 179, 0, 0.35);
+}
+
+.coin-icon {
+  font-size: 20px;
+}
+
+.coin-label {
+  font-size: 13px;
+}
+
+.coin-value {
+  font-size: 19px;
 }
 
 .arena {
