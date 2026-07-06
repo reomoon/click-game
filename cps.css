@@ -37,19 +37,6 @@ button {
   position: relative;
 }
 
-.back-link {
-  position: absolute;
-  top: 16px;
-  left: 20px;
-  font-size: 13px;
-  color: #999;
-  text-decoration: none;
-}
-
-.back-link:hover {
-  color: #666;
-}
-
 h1 {
   margin: 20px 0 4px;
   font-size: 28px;
