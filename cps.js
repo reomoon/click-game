@@ -33,10 +33,84 @@ let coins = Number(localStorage.getItem("cps-coins")) || 0;
 bestScoreEl.textContent = best;
 coinCountEl.textContent = coins;
 
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playTone(freq, duration, { type = "sine", volume = 0.2, delay = 0, endFreq = null } = {}) {
+  const ctx = getAudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  const startTime = ctx.currentTime + delay;
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+  if (endFreq !== null) {
+    osc.frequency.exponentialRampToValueAtTime(Math.max(endFreq, 1), startTime + duration);
+  }
+
+  gain.gain.setValueAtTime(volume, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+function playClickSound() {
+  playTone(700, 0.06, { type: "square", volume: 0.12 });
+}
+
+function playCoinSound() {
+  playTone(880, 0.09, { type: "triangle", volume: 0.18 });
+  playTone(1318, 0.12, { type: "triangle", volume: 0.16, delay: 0.07 });
+}
+
+function playFanfareSound() {
+  [523, 659, 784, 1047].forEach((freq, i) => {
+    playTone(freq, 0.16, { type: "triangle", volume: 0.18, delay: i * 0.09 });
+  });
+}
+
+function playBombSound() {
+  playTone(180, 0.5, { type: "sawtooth", volume: 0.3, endFreq: 30 });
+  playTone(90, 0.4, { type: "square", volume: 0.2, endFreq: 20, delay: 0.03 });
+}
+
+function playGateSuccessSound() {
+  [659, 784, 988, 1318].forEach((freq, i) => {
+    playTone(freq, 0.14, { type: "sine", volume: 0.2, delay: i * 0.06 });
+  });
+}
+
+function playErrorBuzz() {
+  playTone(160, 0.18, { type: "sawtooth", volume: 0.2, endFreq: 90 });
+}
+
+function spawnRipple(button, clientX, clientY) {
+  const rect = button.getBoundingClientRect();
+  const ripple = document.createElement("span");
+  ripple.className = "tap-ripple";
+  ripple.style.left = `${clientX - rect.left}px`;
+  ripple.style.top = `${clientY - rect.top}px`;
+  button.appendChild(ripple);
+  ripple.addEventListener("animationend", () => ripple.remove());
+}
+
 function addCoins(amount) {
   coins += amount;
   localStorage.setItem("cps-coins", String(coins));
   coinCountEl.textContent = coins;
+  playCoinSound();
   if (gateActive) {
     updateGateAvailability();
   }
@@ -105,7 +179,8 @@ function spawnDecoys() {
     decoy.textContent = clickBtn.textContent;
     arena.appendChild(decoy);
     placeInQuadrant(decoy, positions[i + 1]);
-    decoy.addEventListener("click", () => {
+    decoy.addEventListener("click", (e) => {
+      spawnRipple(decoy, e.clientX, e.clientY);
       triggerBomb();
     });
   }
@@ -158,6 +233,7 @@ function spawnBombEffect() {
 function triggerBomb() {
   clearDecoys();
   spawnBombEffect();
+  playBombSound();
   buttonHidden = true;
   clickBtn.style.visibility = "hidden";
 
@@ -260,16 +336,20 @@ function endGame() {
   resultEl.textContent = message;
 }
 
-clickBtn.addEventListener("click", () => {
+clickBtn.addEventListener("click", (e) => {
   if (!running) {
     startGame();
+    spawnRipple(clickBtn, e.clientX, e.clientY);
     return;
   }
+
+  spawnRipple(clickBtn, e.clientX, e.clientY);
 
   if (decoysActive) {
     clearDecoys();
   }
 
+  playClickSound();
   clicks++;
   clickCountEl.textContent = clicks;
 
@@ -280,12 +360,14 @@ clickBtn.addEventListener("click", () => {
   if (clicks === MILESTONE) {
     clickCountEl.classList.add("milestone");
     spawnFireworks();
+    playFanfareSound();
   }
 
   if (clicks === MILESTONE_2) {
     clickCountEl.classList.remove("milestone");
     clickCountEl.classList.add("milestone-2");
     spawnFireworks();
+    playFanfareSound();
   }
 
   if (clicks === GATE_MILESTONE) {
@@ -300,8 +382,11 @@ clickBtn.addEventListener("click", () => {
   }
 });
 
-gateBtn.addEventListener("click", () => {
+gateBtn.addEventListener("click", (e) => {
+  spawnRipple(gateBtn, e.clientX, e.clientY);
+
   if (coins < GATE_COST) {
+    playErrorBuzz();
     gateBtn.classList.remove("shake");
     void gateBtn.offsetWidth;
     gateBtn.classList.add("shake");
@@ -311,6 +396,7 @@ gateBtn.addEventListener("click", () => {
   coins -= GATE_COST;
   localStorage.setItem("cps-coins", String(coins));
   coinCountEl.textContent = coins;
+  playGateSuccessSound();
   closeGate();
   clickBtn.style.visibility = "visible";
   moveButtonRandomly();
